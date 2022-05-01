@@ -4,15 +4,18 @@ declare namespace App {
     session: Session;
   }
 
-  interface Platform {}
+  // interface Platform {}
 
   interface Session {
     user: {
       name: string;
+      lastPosted: Date;
+      created: Date;
+      sensitiveId: string;
       id: string;
     };
     id: string;
   }
 
-  interface Stuff {}
+  // interface Stuff {}
 }

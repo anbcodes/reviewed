@@ -17,6 +17,8 @@
 
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { session } from '$app/stores';
+	import Cooldown from '$lib/Cooldown.svelte';
 
 	export let post;
 
@@ -39,6 +41,8 @@
 			return;
 		}
 
+		$session.user.lastPosted = new Date();
+
 		goto(`/view/${data.post.id}`);
 	};
 </script>
@@ -60,12 +64,19 @@
 				<a class="btn" href="/reply/{post.id}">View</a>
 			</div>
 		</div>
-		<div class="card w-2/5 card-bordered card-compact p-5 my-3">
-			<div class="card-title">Your Reply</div>
-			<textarea class="card-body textarea mb-2" bind:value={content} />
-			<div class="card-actions">
-				<button class="btn" on:click={reply}>Reply</button>
+
+		<Cooldown till={+$session.user.lastPosted + 1000 * 60 * 10}>
+			<div slot="timer" let:timeLeft>
+				<div class="text-center text-xl">You can't post again for another</div>
+				<div class="text-center text-2xl">{timeLeft}</div>
 			</div>
-		</div>
+			<div class="card w-2/5 card-bordered card-compact p-5 my-3">
+				<div class="card-title">Your Reply</div>
+				<textarea class="card-body textarea mb-2" bind:value={content} />
+				<div class="card-actions">
+					<button class="btn" on:click={reply}>Reply</button>
+				</div>
+			</div>
+		</Cooldown>
 	</div>
 {/if}

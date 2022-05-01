@@ -1,3 +1,4 @@
+import { prisma } from "$lib/db";
 import type { GetSession, Handle } from "@sveltejs/kit";
 import { getSessionInfo } from "./routes/api/session";
 
@@ -7,6 +8,16 @@ export const getSession: GetSession = async (event) => {
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.session = await getSessionInfo(event.request);
+
+  if (event.locals.session) {
+    prisma.session.update({
+      where: {
+        id: event.locals.session.id
+      },
+      data: {
+        lastActive: new Date(),
+      }})
+  }
 
   console.log("session", event.request.headers.get('cookie'), "set to", event.locals.session);
 

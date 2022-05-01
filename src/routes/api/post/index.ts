@@ -18,6 +18,12 @@ export const post: RequestHandler = async (
     return { body: { error: "Invalid parentId" } };
   }
 
+  const sinceLastPost = +new Date() - +session.user.lastPosted;
+
+  if (sinceLastPost < 1000 * 60 * 10) {
+    return { body: { error: `You can only post every 10 minutes (${10-Math.round(sinceLastPost / 1000 / 60)} min until you can post again)` } }
+  }
+
   const post = await prisma.post.create({
     data: {
       authorId: session.user.id,
@@ -30,6 +36,15 @@ export const post: RequestHandler = async (
       parent: true,
     },
   });
+
+  await prisma.user.update({
+    where: {
+      id: session.user.id
+    },
+    data: {
+      lastPosted: new Date(),
+    }
+  })
 
   return {
     body: {
