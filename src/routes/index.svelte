@@ -12,38 +12,41 @@
 	import { session } from '$app/stores';
 	export let posts: any[] = [];
 	$: console.log($session);
-	const logout = async () => {
-		await fetch('/api/session', { method: 'delete' });
-		$session = undefined;
-	};
+	console.log(posts);
+	const previewLength = 50;
 </script>
 
-<div class="navbar">
-	<div class="flex-1 text-2xl">Reviewed Social</div>
-	<div class="flex">
-		{#if $session}
-			<a class="btn mr-5" href="/new">Post</a>
-
-			<button class="btn" on:click={logout}>Logout</button>
-		{:else}
-			<a class="btn" href="/login">Log In</a>
-		{/if}
-	</div>
-</div>
-
 {#if $session}
-	<div class="text-5xl text-center">Welcome back {$session.user.name}!</div>
+	<div class="text-5xl text-center pb-3">Welcome back {$session.user.name}!</div>
 {:else}
-	<div class="text-5xl text-center">Welcome!</div>
+	<div class="text-5xl text-center pb-3">Welcome!</div>
 {/if}
 
 {#each posts as post}
-	<div>
-		<div>
-			{post.author.name}
-		</div>
-		<div>
-			{post.content}
+	<div class="flex items-center flex-col">
+		<div class="card w-1/2 card-bordered card-compact p-5 my-3">
+			<div class="card-title flex">
+				<div class="pr-5">
+					{post.author.name}
+				</div>
+				{#if post.parent}
+					<div class="text-sm font-normal">
+						Replying to <a href="/view/{post.parent.id}">
+							"{post.parent.content.slice(0, previewLength)}{post.parent.content.length >
+							previewLength
+								? '...'
+								: ''}" - {post.parent.author.name}
+						</a>
+					</div>
+				{/if}
+			</div>
+			<div class="card-body">
+				{post.content}
+			</div>
+			<div class="card-actions">
+				<a href="/reply/{post.id}" class="btn">Reply</a>
+				<a href="/view/{post.id}" class="btn">View</a>
+			</div>
 		</div>
 	</div>
 {/each}

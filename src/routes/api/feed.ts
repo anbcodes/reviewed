@@ -8,6 +8,9 @@ export const get: RequestHandler = async ({ request }) => {
     },
     include: {
       author: true,
+      parent: {
+        include: { author: true },
+      },
     },
   });
 

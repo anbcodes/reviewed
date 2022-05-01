@@ -1,6 +1,20 @@
+<script context="module" lang="ts">
+	export const load: Load = ({ session, url }) => {
+		if (!session) {
+			return {
+				redirect: `/login?to=${url}`,
+				status: 303
+			};
+		} else {
+			return {};
+		}
+	};
+</script>
+
 <script lang="ts">
 	import { session } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import type { Load } from '@sveltejs/kit';
 
 	let content: string;
 

@@ -5,8 +5,8 @@ import { prisma } from "$lib/db";
 
 export const getSessionInfo = async (request: Request) => {
   const cookies = parse(request.headers.get("cookie") || "");
+  console.log(cookies);
   if (cookies.session) {
-    console.log("SEARCHING FOR ", cookies.session);
     const session = await prisma.session.findUnique({
       where: {
         id: cookies.session,
@@ -15,7 +15,6 @@ export const getSessionInfo = async (request: Request) => {
         user: true,
       },
     });
-    console.log(session);
     return session;
   }
   return undefined;

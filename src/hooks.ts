@@ -8,6 +8,8 @@ export const getSession: GetSession = async (event) => {
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.session = await getSessionInfo(event.request);
 
+  console.log("session", event.request.headers.get('cookie'), "set to", event.locals.session);
+
   const response = await resolve(event);
 
   return response;

@@ -6,7 +6,11 @@ export const get: RequestHandler = async ({ request, params }) => {
 
   const post = await prisma.post.findUnique({
     where: { id },
-    include: { author: true, children: true },
+    include: { author: true, children: {
+      include: {author: true},
+    }, parent: {
+      include: {author: true}
+    } },
   });
 
   return {

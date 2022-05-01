@@ -8,20 +8,26 @@ export const post: RequestHandler = async (
     return { body: { error: "Not logged in" } };
   }
 
-  const { content } = await request.json();
+  const { content, parentId } = await request.json();
 
   if (!content || typeof content !== "string") {
     return { body: { error: "Post can not be empty" } };
   }
 
+  if (parentId && typeof parentId !== "string") {
+    return { body: { error: "Invalid parentId" } };
+  }
+
   const post = await prisma.post.create({
     data: {
       authorId: session.user.id,
+      parentId: parentId || undefined, 
       content,
     },
     include: {
       author: true,
       children: true,
+      parent: true,
     },
   });
 

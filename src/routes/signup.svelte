@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { session } from '$app/stores';
+	import { session, page } from '$app/stores';
 
 	let name: string;
 	let email: string;
@@ -27,7 +27,11 @@
 			return;
 		}
 		$session = data.session;
-		goto('/');
+		if ($page.url.searchParams.get('to')) {
+			goto($page.url.searchParams.get('to'));
+		} else {
+			goto('/');
+		}
 	};
 </script>
 
@@ -35,6 +39,11 @@
 	{#if error}
 		<div class="text-error">{error}</div>
 	{/if}
+
+	<a
+		href="/login{$page.url.searchParams.get('to') ? `?to=${$page.url.searchParams.get('to')}` : ''}"
+		class="link-secondary">Signup instead</a
+	>
 
 	<label for="name" class="label">Name</label>
 	<input class="input input-bordered" bind:value={name} name="name" />
