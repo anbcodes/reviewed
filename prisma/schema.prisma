@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  url      = "file:./data.db"
+  url      = env("DATABASE_URL")
   provider = "sqlite"
 }
 
