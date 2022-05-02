@@ -44,7 +44,13 @@ export const post: RequestHandler = async (
     data: {
       lastPosted: new Date(),
     }
-  })
+  });
+
+  const review = await prisma.review.create({
+    data: {
+      postId: post.id,
+    }
+  });
 
   return {
     body: {

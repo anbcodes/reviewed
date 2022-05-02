@@ -15,10 +15,23 @@ model User {
   name        String
   created     DateTime      @default(now())
   lastPosted  DateTime?
+  review      Review?       @relation(fields: [reviewId], references: [id])
+  reviewId    String?
   sessions    Session[]
   posts       Post[]
   sensitive   UserSensitive @relation(fields: [sensitiveId], references: [id])
   sensitiveId String        @unique
+}
+
+model Review {
+  id        String @id @unique @default(uuid())
+  reviewers User[]
+
+  approve   Int @default(0)
+  disaprove Int @default(0)
+
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @unique
 }
 
 model UserSensitive {
@@ -36,13 +49,16 @@ model Session {
 }
 
 model Post {
-  id       String   @id @unique @default(uuid())
-  content  String
-  created  DateTime @default(now())
-  updated  DateTime @updatedAt
-  author   User     @relation(fields: [authorId], references: [id])
+  id      String   @id @unique @default(uuid())
+  content String
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  author   User    @relation(fields: [authorId], references: [id])
   authorId String
-  parent   Post?    @relation(name: "post", fields: [parentId], references: [id])
+  parent   Post?   @relation(name: "post", fields: [parentId], references: [id])
   parentId String?
-  children Post[]   @relation("post")
+  children Post[]  @relation("post")
+
+  review Review?
 }

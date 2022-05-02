@@ -1,7 +1,7 @@
 /// <reference types="@sveltejs/kit" />
 declare namespace App {
   interface Locals {
-    session: Session;
+    session?: Session;
   }
 
   // interface Platform {}
@@ -12,6 +12,12 @@ declare namespace App {
       lastPosted: Date;
       created: Date;
       sensitiveId: string;
+      review: {
+        postId: string;
+        post: {
+          content: string;
+        }, 
+      }
       id: string;
     };
     id: string;

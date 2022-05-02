@@ -12,7 +12,16 @@ export const getSessionInfo = async (request: Request) => {
         id: cookies.session,
       },
       include: {
-        user: true,
+        user: {
+          include: {
+            review: {
+              select: {
+                post: true,
+                postId: true,
+              },
+            }
+          }
+        }
       },
     });
     return session;
