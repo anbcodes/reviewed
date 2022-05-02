@@ -21,7 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   console.log("session", event.request.headers.get('cookie'), "set to", event.locals.session);
 
-  if (event.url.pathname.startsWith('/api') && event.locals.session.user.review) {
+  if (event.url.pathname.startsWith('/api') && event.locals.session?.user?.review) {
     return new Response(JSON.stringify({
         error: "You must review a post",
         session: event.locals.session
