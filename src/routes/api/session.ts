@@ -91,7 +91,7 @@ export const del: RequestHandler = async ({ request: { headers } }) => {
 
     return {
       headers: {
-        "set-cookie": ["session="],
+        "set-cookie": [makeSessionCookie("null")],
       },
       body: {
         success: true,

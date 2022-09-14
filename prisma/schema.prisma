@@ -21,6 +21,19 @@ model User {
   posts       Post[]
   sensitive   UserSensitive @relation(fields: [sensitiveId], references: [id])
   sensitiveId String        @unique
+
+  following   FollowList @relation("follower", fields: [followingId], references: [id])
+  followingId String     @unique
+
+  followers   FollowList? @relation(fields: [followersId], references: [id])
+  followersId String?
+}
+
+model FollowList {
+  id String @id @unique @default(uuid())
+
+  user      User?  @relation("follower")
+  following User[]
 }
 
 model Review {
